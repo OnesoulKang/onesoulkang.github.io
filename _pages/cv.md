@@ -11,9 +11,9 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
-* M.S. in Jekyll, GitHub University, 2014
-* B.S. in GitHub, GitHub University, 2012
+* Ph.D in Mechanical Engineering, Sungkyunkwan University, 2026 (expected)
+* B.S. in Mechanical Engineering, Ajou University, 2017
+* Chungnam Science High School, 2012
 
 Work experience
 ======
@@ -53,12 +53,9 @@ Talks
     {% include archive-single-talk-cv.html  %}
   {% endfor %}</ul>
   
-Teaching
+Awards and Honors
 ======
-  <ul>{% for post in site.teaching reversed %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul>
-  
-Service and leadership
-======
-* Currently signed in to 43 different slack teams
+* Dean's List - Ajou University (Jul. 2016)
+* Global Ph.D. Fellowship - National Research Foundation of Korea (Mar. 2018)
+* Grand Prize, 2nd Dronbot Challenge - Daejeon-si, ROK Army Training & Doctrine Command, Agency for Defense Development (Aug, 2019)
+* Grand Prize, 2025 POSCO Industrial AI-Robotics Challenge - POSCO (Sep. 2025)
