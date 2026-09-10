@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hansol Kang — Legged Robotics</title>
+<meta name="description" content="Hansol Kang, Ph.D. candidate at Sungkyunkwan University. Reinforcement learning control and sim-to-real transfer for legged robots.">
+<style>
+:root{
+  --bg:#fbfbfa; --fg:#1c1c1a; --muted:#6b6b66; --line:#e2e2dd;
+  --accent:#8a3324; --card:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#131313; --fg:#e8e8e4; --muted:#9a9a93; --line:#2c2c2a;
+         --accent:#e0876a; --card:#1a1a19; }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{padding:72px 0 40px}
+h1{font-size:2.4rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
+.role{color:var(--muted);margin:0 0 20px}
+.lede{font-size:1.08rem;max-width:62ch;margin:0 0 24px}
+.links{display:flex;flex-wrap:wrap;gap:10px;list-style:none;padding:0;margin:0}
+.links a{
+  display:inline-block;border:1px solid var(--line);border-radius:6px;
+  padding:6px 12px;font-size:.92rem;color:var(--fg);background:var(--card);
+}
+.links a:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
+
+section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;
+   color:var(--muted);margin:0 0 28px;font-weight:600}
+h3{font-size:1.25rem;margin:0 0 4px;letter-spacing:-.01em}
+.venue{color:var(--muted);font-size:.9rem;margin:0 0 12px}
+.topic{margin-bottom:44px}
+.topic:last-child{margin-bottom:0}
+.topic p{max-width:66ch}
+ul.tight{padding-left:1.1em;max-width:66ch}
+ul.tight li{margin-bottom:6px}
+
+.clips{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px}
+.clip{margin:0}
+.clip video{width:100%;display:block;border-radius:8px;background:#000;border:1px solid var(--line)}
+.clip figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
+@media (max-width:620px){ .clips{grid-template-columns:1fr} }
+
+ol.pubs{padding-left:1.4em;margin:0}
+ol.pubs li{margin-bottom:12px}
+ol.pubs em{color:var(--muted)}
+.me{font-weight:700}
+.sub{font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;
+     color:var(--muted);margin:0 0 14px;font-weight:600}
+.awards li{margin-bottom:8px}
+.year{color:var(--muted)}
+
+footer{padding:40px 0 72px;border-top:1px solid var(--line);
+       color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Hansol Kang</h1>
+  <p class="role">Ph.D. Candidate, Mechanical Engineering, Sungkyunkwan University<br>
+     Robotics Innovatory — advisor: Prof. Hyouk Ryeol Choi</p>
+  <p class="lede">I build learning-based controllers for legged robots. My thesis closes the
+     sim-to-real gap for <strong>high-reduction quadrupeds</strong> — machines whose gearboxes
+     give them payload and holding torque, but whose actuator dynamics break the assumptions
+     most reinforcement learning pipelines are trained under.</p>
+  <ul class="links">
+    <li><a href="mailto:kanghs0822@skku.edu">kanghs0822@skku.edu</a></li>
+    <li><a href="assets/cv_hansol_kang.pdf">Curriculum Vitae (PDF)</a></li>
+    <!-- TODO: add your own links, e.g.
+    <li><a href="https://scholar.google.com/citations?user=XXXX">Google Scholar</a></li>
+    <li><a href="https://github.com/XXXX">GitHub</a></li>
+    <li><a href="https://www.linkedin.com/in/XXXX">LinkedIn</a></li>
+    -->
+  </ul>
+</header>
+
+<section>
+  <h2>Research</h2>
+
+  <div class="topic">
+    <h3>Sim-to-real transfer for high-gear-ratio quadrupeds</h3>
+    <p class="venue">Ph.D. thesis · <em>Machines</em> 2026 · ICRA 2025 (Late Breaking Results)</p>
+    <p>Quasi-direct-drive legs are transparent and easy to simulate; high-reduction legs are not.
+       Above a 40:1 ratio, gearbox friction, motor nonlinearity and control delay dominate the
+       joint response, and a policy trained on an ideal actuator falls over on the real robot.
+       I attack that gap from both ends:</p>
+    <ul class="tight">
+      <li>a BLDC motor model in simulation, plus a time-delayed network that learns actuator
+          dynamics implicitly from short-term joint history;</li>
+      <li>an extended friction model whose parameters are fitted by CMA-ES in a real-sim-real
+          loop, cutting the simulation-to-hardware joint trajectory error by up to
+          <strong>42%</strong> against prior work;</li>
+      <li>a GRU height estimator that infers local terrain from proprioception alone, taking the
+          same policy over 20 cm steps and continuous stairs.</li>
+    </ul>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/locomotion-flat.mp4" poster="assets/poster/locomotion-flat.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Velocity command tracking on flat ground, AiDIN-VIII (&gt;40:1).</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/locomotion-uneven.mp4" poster="assets/poster/locomotion-uneven.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Uneven terrain mocked up with rubber mats (2× speed).</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/locomotion-stairs.mp4" poster="assets/poster/locomotion-stairs.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>20 cm step and continuous stairs with the GRU height estimator.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/payload.mp4" poster="assets/poster/payload.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Walking under an 18 kg payload — a third of the robot's own mass.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="topic">
+    <h3>ARS: recovery and self-righting from a single network</h3>
+    <p class="venue">First author · <em>Biomimetics</em>, 2024</p>
+    <p>Getting a fallen quadruped back on its feet is contact-rich enough that predicting the
+       contact sequence in advance is impractical, so scripted trajectories break down. ARS trains
+       per-behavior policies with a behavior selector, then distills all of them into
+       <strong>one</strong> network with a DAGGER-like scheme. The single network is cheaper to
+       run online than the multi-network baseline, recovers more smoothly, and generalizes to
+       terrain it never saw in training — 82% success upright, 58% from fully upside-down.</p>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/recovery-kick.mp4" poster="assets/poster/recovery-kick.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Recovering after being kicked over.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/recovery-flip.mp4" poster="assets/poster/recovery-flip.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Self-righting from upside-down.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="topic">
+    <h3>AiDIN quadruped platforms</h3>
+    <p class="venue">Hardware and whole-body control · IEEE T-IE 2020, ICRA 2019, IROS 2017-2019</p>
+    <p>Before the learning work I built robots. I contributed to the AiDIN series at SKKU —
+       torque-controllable modular actuator units, capacitive joint torque sensors, the ROS-based
+       sensing stack (IMU, encoders, stereo camera), and whole-body control for stair climbing and
+       balance recovery — including a joint SKKU-UCLA effort.</p>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/aidin-lab.mp4" poster="assets/poster/aidin-lab.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>AiDIN V / VI indoors.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/aidin-outdoor.mp4" poster="assets/poster/aidin-outdoor.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Outdoor trial on campus.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="topic">
+    <h3>Ongoing: perceptive and bipedal locomotion</h3>
+    <p>Proprioception alone means the robot only learns about the terrain after it has touched it.
+       I am training controllers that consume the raw depth image directly — no elevation map, and
+       therefore no localization stack to keep it aligned — and extending the same actuator-identification
+       approach to bipeds.</p>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/perceptive-sim.mp4" poster="assets/poster/perceptive-sim.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Perceptive locomotion in Isaac Lab.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/biped-sim.mp4" poster="assets/poster/biped-sim.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Bipedal locomotion in Isaac Gym.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Publications</h2>
+
+  <p class="sub">Journal (SCIE / ESCI)</p>
+  <ol class="pubs" reversed>
+    <li><span class="me">Hansol Kang</span>, Hyunyong Lee, Jiman Park, Seongwon Nam, Yeongwoo Son, Bumsu Yi, Jaeyoung Oh, Hyeonwoo Yu, Hyouk Ryeol Choi. “Enhancing Sim-to-Real Transfer for a High-Gear-Ratio Quadruped Robot via Extended Actuator Dynamics Identification.” <em>Machines</em>, 2026.</li>
+    <li>Seongwon Nam, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jiman Park, Yeongwoo Son, Bumsu Yi, Jaeyoung Oh, Hyouk Ryeol Choi. “Real-Time Control-Constrained DDP for Underactuated Balancing of Legged Robots.” <em>IEEE Robotics and Automation Letters</em>, 2026.</li>
+    <li>Yeongwoo Son, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jiman Park, Seongwon Nam, Jaeyoung Oh, Bumsu Yi, Hyeonwoo Yu, Hyouk Ryeol Choi. “3D RoA-Planner: Path Planner for Quadruped Robots in Confined Spaces Using 3D Rotatable Areas.” <em>IEEE Robotics and Automation Letters</em>, 2026.</li>
+    <li>Yeong Woo Son, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jiman Park, Seongwon Nam, Jaeyoung Oh, Bumsu Yi, Junha Song, Bogeun Kim, Daegeun Song, Hyouk Ryeol Choi. “RoA-Planner: Rotatable Area based Path Planner in Dense Spaces.” <em>IEEE Transactions on Automation Science and Engineering</em>, 2025.</li>
+    <li>Soo Yeon Choi, Hyunyong Lee, Ji Man Park, <span class="me">Hansol Kang</span>, Seong Won Nam, Bum Su Yi, Yeong Woo Son, Jae Young Oh, Jun Ha Song, Bo Geun Kim, Dae Geun Song, Hyouk Ryeol Choi. “Development of Two-DOF Simultaneous Gravity Compensator for Mobile Manipulator.” <em>IEEE Robotics and Automation Letters</em>, 2025.</li>
+    <li><span class="me">Han Sol Kang</span>, Hyun Yong Lee, Ji Man Park, Seong Won Nam, Yeong Woo Son, Bum Su Yi, Jae Young Oh, Jun Ha Song, Soo Yeon Choi, Bo Geun Kim, Hyun Seok Kim, Hyouk Ryeol Choi. “ARS: AI-Driven Recovery Controller for Quadruped Robot Using Single-Network Model.” <em>Biomimetics</em>, 2024.</li>
+    <li>Yeong Gwang Son, Tat Hieu Bui, Juyong Hong, Yong Hyeon Kim, Seung Jae Moon, Chun Soo Kim, Issac Rhee, <span class="me">Hansol Kang</span>, Hyouk Ryeol Choi. “CoAS-Net: Context-Aware Suction Network With a Large-Scale Domain Randomized Synthetic Dataset.” <em>IEEE Robotics and Automation Letters</em>, 2023.</li>
+    <li>Young Hun Lee, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jun Hyuk Lee, Ji Man Park, Chunghyuk Kang, Yoon Haeng Lee, Yong Bum Kim, Hyouk Ryeol Choi. “Balance Recovery Based on Whole-Body Control Using Joint Torque Feedback for Quadrupedal Robots.” <em>Journal of Mechanisms and Robotics</em>, 2021.</li>
+    <li>Young Hun Lee, Yoon Haeng Lee, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jun Hyuk Lee, Ji Man Park, Yong Bum Kim, Hyungpil Moon, Ja Choon Koo, Hyouk Ryeol Choi. “Whole-body control and angular momentum regulation using torque sensors for quadrupedal robots.” <em>Journal of Intelligent &amp; Robotic Systems</em>, 2021.</li>
+    <li>Yoon Haeng Lee, Young Hun Lee, Hyunyong Lee, <span class="me">Hansol Kang</span>, Jun Hyuk Lee, Luong Tin Phan, Sungmoon Jin, Yong Bum Kim, Dong-Yeop Seok, Seung Yeon Lee, Hyungpil Moon, Ja Choon Koo, Hyouk Ryeol Choi. “Development of A Quadruped Robot System with Torque-Controllable Modular Actuator Unit.” <em>IEEE Transactions on Industrial Electronics</em>, 2020.</li>
+    <li>Luong Tin Phan, Yoon Haeng Lee, Young Hun Lee, Hyun-Yong Lee, <span class="me">Hansol Kang</span>, Hyouk Ryeol Choi. “Study on effects of spinal joint for running quadruped robots.” <em>Intelligent Service Robotics</em>, 2020.</li>
+  </ol>
+
+  <p class="sub" style="margin-top:32px">Conference</p>
+  <ol class="pubs" reversed>
+    <li><span class="me">Hansol Kang</span>, Hyunyong Lee, Jiman Park, Seongwon Nam, Yeongwoo Son, Bumsu Yi, Jaeyoung Oh, Bogeun Kim, Daegeun Song, Hyouk Ryeol Choi. “Enhancing Sim-to-Real Transfer in High Gear Ratio Quadruped Robot via Short-Term Temporal Information.” <em>ICRA</em>, Atlanta, 2025 — Late Breaking Results.</li>
+    <li>Young Hun Lee, Ja Choon Koo, Hyouk Ryeol Choi, Yoon Haeng Lee, Hyunyong Lee, <span class="me">Hansol Kang</span>, Yong Bum Kim, Jun Hyuk Lee, Luong Tin Phan, Sung Moon Jin, Hyungpil Moon. “Whole-Body Motion and Landing Force Control for Quadrupedal Stair Climbing.” <em>IROS</em>, 2019.</li>
+    <li>Seungjun Woo, Jinjae Shin, Yoon Haeng Lee, Young Hun Lee, Hyun-Yong Lee, <span class="me">Hansol Kang</span>, Hyouk Ryeol Choi, Hyungpil Moon. “Stair-mapping with Point-cloud Data and Stair-modeling for Quadruped Robot.” <em>UR</em>, 2019.</li>
+    <li>Yoon Haeng Lee, Young Hun Lee, Hyun-Yong Lee, <span class="me">Hansol Kang</span>, Luong Tin Phan, Sungmoon Jin, Yong Bum Kim, Dong-Yeop Seok, Seung Yeon Lee, Hyungpil Moon, Ja Choon Koo, Hyouk Ryeol Choi. “Force-controllable Quadruped Robot System with Capacitive-type Joint Torque Sensor.” <em>ICRA</em>, 2019.</li>
+    <li>Luong Tin Phan, Yoon Haeng Lee, Young Hun Lee, Hyun-Yong Lee, <span class="me">Hansol Kang</span>, Hyouk Ryeol Choi. “Effects of spinal joint on quadrupedal bounding.” <em>URAI</em>, 2018.</li>
+    <li>Luong Tin Phan, Yoon Haeng Lee, Young Hun Lee, Hyunyong Lee, <span class="me">Hansol Kang</span>, Hyouk Ryeol Choi. “Study on quadruped bounding with a passive compliant spine.” <em>IROS</em>, 2017.</li>
+    <li>Young Hun Lee, Yoon Haeng Lee, Hyunyong Lee, Luong Tin Phan, <span class="me">Hansol Kang</span>, Uikyum Kim, Jeongmin Jeon, Hyouk Ryeol Choi. “Trajectory design and control of quadruped robot for trotting over obstacles.” <em>IROS</em>, 2017.</li>
+    <li>Yoon Haeng Lee, Young Hun Lee, Hyunyong Lee, Luong Tin Phan, <span class="me">Hansol Kang</span>, Yong Bum Kim, Hyouk Ryeol Choi. “Development of torque controllable leg for running robot, AiDIN-IV.” <em>IROS</em>, 2017.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Awards</h2>
+  <ul class="tight awards">
+    <li>Grand Prize, quadruped robot division — POSCO Industrial AI Challenge, POSCO Holdings / POSCO DX <span class="year">(2025)</span></li>
+    <li>Best Paper Award — Institute of Control, Robotics and Systems (ICROS) <span class="year">(2025)</span></li>
+    <li>Grand Prize — 2nd Dronebot Challenge, ROK Army TRADOC / Agency for Defense Development <span class="year">(2019)</span></li>
+    <li>Global Ph.D. Fellowship — National Research Foundation of Korea <span class="year">(2018)</span></li>
+    <li>Dean's List — Ajou University <span class="year">(2016)</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <ul class="tight">
+    <li>Rough-terrain locomotion control from 3D ground data — Hyundai Rotem <span class="year">(2022–2024)</span></li>
+    <li>Ultra-high-DOF quadruped robot for unrestricted movement on rough terrain — National Research Foundation of Korea, <em>principal investigator</em> <span class="year">(2018–2021)</span></li>
+    <li>Multi-modal legged robot technology for future smart cities — Gyeonggido Business &amp; Science Accelerator <span class="year">(2017–2019)</span></li>
+    <li>Effect of body compliance on the running performance of a bio-inspired quadruped — Sungkyunkwan University <span class="year">(2017)</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Education</h2>
+  <ul class="tight">
+    <li><strong>Ph.D. (integrated M.S./Ph.D.), Mechanical Engineering</strong> — Sungkyunkwan University, 2017–present.<br>
+        Thesis: <em>Learning robust locomotion and self-righting for high-reduction quadruped robots via actuator dynamics identification.</em></li>
+    <li><strong>B.S., Mechanical Engineering</strong> — Ajou University, 2012–2017.</li>
+  </ul>
+</section>
+
+<footer>
+  <p>Hansol Kang · <a href="mailto:kanghs0822@skku.edu">kanghs0822@skku.edu</a> ·
+     Robotics Innovatory, Sungkyunkwan University, Suwon, Korea</p>
+</footer>
+
+</div>
+</body>
+</html>
