@@ -38,7 +38,7 @@ h1{font-size:2.4rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
 section{padding:40px 0;border-top:1px solid var(--line)}
 h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.12em;
    color:var(--muted);margin:0 0 28px;font-weight:600}
-h3{font-size:1.25rem;margin:0 0 4px;letter-spacing:-.01em}
+h3{font-size:1.2rem;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em;max-width:44ch}
 .venue{color:var(--muted);font-size:.9rem;margin:0 0 12px}
 .topic{margin-bottom:44px}
 .topic:last-child{margin-bottom:0}
@@ -50,6 +50,7 @@ ul.tight li{margin-bottom:6px}
 .clip{margin:0}
 .clip video{width:100%;display:block;border-radius:8px;background:#000;border:1px solid var(--line)}
 .clip figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
+.sub.group{margin:26px 0 12px}
 @media (max-width:620px){ .clips{grid-template-columns:1fr} }
 
 ol.pubs{padding-left:1.4em;margin:0}
@@ -91,47 +92,86 @@ footer{padding:40px 0 72px;border-top:1px solid var(--line);
   <h2>Research</h2>
 
   <div class="topic">
-    <h3>Sim-to-real transfer for high-gear-ratio quadrupeds</h3>
-    <p class="venue">Ph.D. thesis · <em>Machines</em> 2026 · ICRA 2025 (Late Breaking Results)</p>
-    <p>Quasi-direct-drive legs are transparent and easy to simulate; high-reduction legs are not.
-       Above a 40:1 ratio, gearbox friction, motor nonlinearity and control delay dominate the
-       joint response, and a policy trained on an ideal actuator falls over on the real robot.
-       I attack that gap from both ends:</p>
+    <h3>Enhancing Sim-to-Real Transfer for a High-Gear-Ratio Quadruped Robot via Extended
+        Actuator Dynamics Identification</h3>
+    <p class="venue">First author · <em>Machines</em>, 2026</p>
+    <p>Motor modelling alone leaves joint inertia, friction and delay unaccounted for. Here the
+       simulator is fitted to the hardware in a real-sim-real loop: an extended friction model
+       replacing the usual Coulomb-viscous one, with its parameters — per-joint inertia, damping,
+       friction, joint bias — optimized by CMA-ES against measured trajectories.</p>
     <ul class="tight">
-      <li>a BLDC motor model in simulation, plus a time-delayed network that learns actuator
-          dynamics implicitly from short-term joint history;</li>
-      <li>an extended friction model whose parameters are fitted by CMA-ES in a real-sim-real
-          loop, cutting the simulation-to-hardware joint trajectory error by up to
-          <strong>42%</strong> against prior work;</li>
-      <li>a GRU height estimator that infers local terrain from proprioception alone, taking the
-          same policy over 20 cm steps and continuous stairs.</li>
+      <li>matches real joint motion best exactly where prior models fail, at low joint velocity;</li>
+      <li>on held-out trajectories, joint error drops roughly <strong>33%</strong> at HFE and KFE
+          against the previous state of the art;</li>
+      <li>policies trained on the fitted simulator show the smallest sim-to-real gap, with the
+          position-velocity phase portrait deviation cut by up to <strong>42%</strong>;</li>
+      <li>combined with a GRU height estimator that infers local terrain from proprioception
+          alone, a policy trained on the fitted simulator clears a 20&nbsp;cm step and
+          continuous stairs.</li>
     </ul>
+
+    <p class="sub group">Flat terrain</p>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/locomotion-omni.mp4" poster="assets/poster/locomotion-omni.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Omnidirectional command tracking on flat ground (2× speed).</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/locomotion-speed.mp4" poster="assets/poster/locomotion-speed.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Forward velocity command tracking up to 1.1&nbsp;m/s, with no domain
+          randomization beyond floor friction.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/payload.mp4" poster="assets/poster/payload.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>The same controller walking under an 18&nbsp;kg payload — a third of the
+          robot's own mass.</figcaption>
+      </figure>
+    </div>
+
+    <p class="sub group">Rough terrain</p>
+    <div class="clips">
+      <figure class="clip">
+        <video src="assets/video/locomotion-step.mp4" poster="assets/poster/locomotion-step.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Climbing a 20&nbsp;cm step.</figcaption>
+      </figure>
+      <figure class="clip">
+        <video src="assets/video/locomotion-stairs.mp4" poster="assets/poster/locomotion-stairs.jpg"
+               controls loop muted playsinline preload="none"></video>
+        <figcaption>Complex terrain built from stairs and ramps.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="topic">
+    <h3>Enhancing Sim-to-Real Transfer in High Gear Ratio Quadruped Robot via Short-Term
+        Temporal Information</h3>
+    <p class="venue">First author · <em>ICRA</em> 2025, Late Breaking Results</p>
+    <p>A first pass at the gap, from the actuator inward. I put a BLDC motor model into the
+       simulator instead of an ideal torque source, and gave the policy a time-delayed network
+       over a short window of recent joint states, so it learns the actuator's dynamic response
+       implicitly rather than being told it. The resulting controller tracks user velocity
+       commands on the real AiDIN-VIII (gear ratio &gt; 40:1) and holds up on terrain it never
+       saw flat.</p>
     <div class="clips">
       <figure class="clip">
         <video src="assets/video/locomotion-flat.mp4" poster="assets/poster/locomotion-flat.jpg"
                controls loop muted playsinline preload="none"></video>
-        <figcaption>Velocity command tracking on flat ground, AiDIN-VIII (&gt;40:1).</figcaption>
+        <figcaption>Velocity command tracking on flat ground.</figcaption>
       </figure>
       <figure class="clip">
         <video src="assets/video/locomotion-uneven.mp4" poster="assets/poster/locomotion-uneven.jpg"
                controls loop muted playsinline preload="none"></video>
         <figcaption>Uneven terrain mocked up with rubber mats (2× speed).</figcaption>
       </figure>
-      <figure class="clip">
-        <video src="assets/video/locomotion-stairs.mp4" poster="assets/poster/locomotion-stairs.jpg"
-               controls loop muted playsinline preload="none"></video>
-        <figcaption>20 cm step and continuous stairs with the GRU height estimator.</figcaption>
-      </figure>
-      <figure class="clip">
-        <video src="assets/video/payload.mp4" poster="assets/poster/payload.jpg"
-               controls loop muted playsinline preload="none"></video>
-        <figcaption>Walking under an 18 kg payload — a third of the robot's own mass.</figcaption>
-      </figure>
     </div>
   </div>
 
   <div class="topic">
-    <h3>ARS: recovery and self-righting from a single network</h3>
+    <h3>ARS: AI-Driven Recovery Controller for Quadruped Robot Using Single-Network Model</h3>
     <p class="venue">First author · <em>Biomimetics</em>, 2024</p>
     <p>Getting a fallen quadruped back on its feet is contact-rich enough that predicting the
        contact sequence in advance is impractical, so scripted trajectories break down. ARS trains
@@ -155,11 +195,16 @@ footer{padding:40px 0 72px;border-top:1px solid var(--line);
 
   <div class="topic">
     <h3>AiDIN quadruped platforms</h3>
-    <p class="venue">Hardware and whole-body control · IEEE T-IE 2020, ICRA 2019, IROS 2017-2019</p>
-    <p>Before the learning work I built robots. I contributed to the AiDIN series at SKKU —
-       torque-controllable modular actuator units, capacitive joint torque sensors, the ROS-based
-       sensing stack (IMU, encoders, stereo camera), and whole-body control for stair climbing and
-       balance recovery — including a joint SKKU-UCLA effort.</p>
+    <p class="venue">Robot sensing system and hardware bring-up · co-author, IEEE T-IE 2020,
+       ICRA 2019, IROS 2017–2019</p>
+    <p>Before the learning work, I took part in developing the AiDIN series as a member of the
+       quadruped robot team at SKKU, including a joint SKKU-UCLA collaboration. My own
+       contribution was the sensing side: designing the ROS-based data acquisition system that
+       brings the IMU, joint encoders and stereo camera into one pipeline for the control and
+       research code to read from — the layer everything else on these robots is built on top
+       of.</p>
+    <p>I also did the hands-on bring-up — tuning motor drivers, soldering sensing PCBs,
+       assembling the legs, running the experiments.</p>
     <div class="clips">
       <figure class="clip">
         <video src="assets/video/aidin-lab.mp4" poster="assets/poster/aidin-lab.jpg"
@@ -174,25 +219,6 @@ footer{padding:40px 0 72px;border-top:1px solid var(--line);
     </div>
   </div>
 
-  <div class="topic">
-    <h3>Ongoing: perceptive and bipedal locomotion</h3>
-    <p>Proprioception alone means the robot only learns about the terrain after it has touched it.
-       I am training controllers that consume the raw depth image directly — no elevation map, and
-       therefore no localization stack to keep it aligned — and extending the same actuator-identification
-       approach to bipeds.</p>
-    <div class="clips">
-      <figure class="clip">
-        <video src="assets/video/perceptive-sim.mp4" poster="assets/poster/perceptive-sim.jpg"
-               controls loop muted playsinline preload="none"></video>
-        <figcaption>Perceptive locomotion in Isaac Lab.</figcaption>
-      </figure>
-      <figure class="clip">
-        <video src="assets/video/biped-sim.mp4" poster="assets/poster/biped-sim.jpg"
-               controls loop muted playsinline preload="none"></video>
-        <figcaption>Bipedal locomotion in Isaac Gym.</figcaption>
-      </figure>
-    </div>
-  </div>
 </section>
 
 <section>
@@ -253,6 +279,7 @@ footer{padding:40px 0 72px;border-top:1px solid var(--line);
     <li><strong>Ph.D. (integrated M.S./Ph.D.), Mechanical Engineering</strong> — Sungkyunkwan University, 2017–present.<br>
         Thesis: <em>Learning robust locomotion and self-righting for high-reduction quadruped robots via actuator dynamics identification.</em></li>
     <li><strong>B.S., Mechanical Engineering</strong> — Ajou University, 2012–2017.</li>
+    <li><strong>Chungnam Science High School</strong> — 2011–2012.</li>
   </ul>
 </section>
 
